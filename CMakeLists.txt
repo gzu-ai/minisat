@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(minisat)
 
@@ -52,7 +52,9 @@ target_link_libraries(minisat-lib-static ${ZLIB_LIBRARY})
 
 add_executable(minisat_core minisat/core/Main.cc)
 add_executable(minisat_simp minisat/simp/Main.cc)
-
+if(WIN32 AND NOT MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS " -static -static-libgcc -static-libstdc++")
+endif()
 if(STATIC_BINARIES)
   target_link_libraries(minisat_core minisat-lib-static)
   target_link_libraries(minisat_simp minisat-lib-static)
