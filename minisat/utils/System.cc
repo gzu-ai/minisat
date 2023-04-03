@@ -90,8 +90,16 @@ double Minisat::memUsed() {
 double Minisat::memUsedPeak() { return memUsed(); }
 
 #else
+#include <windows.h>  
+#include <psapi.h>
+#include <stdio.h>
 double Minisat::memUsed()     { return 0; }
-double Minisat::memUsedPeak() { return 0; }
+double Minisat::memUsedPeak(bool strictlyPeak) {
+    HANDLE handle = GetCurrentProcess();
+    PROCESS_MEMORY_COUNTERS pmc;
+    GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
+    return (double)pmc.PeakWorkingSetSize/(1024*1024);
+ }
 #endif
 
 
